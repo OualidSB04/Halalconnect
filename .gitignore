@@ -1,0 +1,23 @@
+# Dependencias
+node_modules/
+servidor/node_modules/
+
+# Variables de entorno con datos sensibles
+.env
+servidor/.env
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Archivos temporales
+*.tmp
+*.temp

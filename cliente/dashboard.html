@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Dashboard</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="imagenes/logo.png" alt="Logo" class="navbar-logo">
+            HalalConnect
+        </div>
+        <div class="navbar-menu">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="certificaciones.html">Certificaciones</a>
+            <span id="usuario-nombre"></span>
+            <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Panel de Control</h2>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Clientes</h3>
+                <div class="stat-number" id="total-clientes">0</div>
+            </div>
+            <div class="stat-card success">
+                <h3>Certificados Activos</h3>
+                <div class="stat-number" id="total-certificados">0</div>
+            </div>
+            <div class="stat-card warning">
+                <h3>Próximos a Caducar</h3>
+                <div class="stat-number" id="proximos-caducar">0</div>
+            </div>
+            <div class="stat-card danger">
+                <h3>Caducados</h3>
+                <div class="stat-number" id="caducados">0</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Clientes por Sector</h3>
+                <canvas id="grafico-sectores"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Estado de Certificaciones</h3>
+                <canvas id="grafico-estados"></canvas>
+            </div>
+        </div>
+
+        <div class="page-header">
+            <h2>Certificados Próximos a Caducar (30 días)</h2>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Nº Certificado</th>
+                        <th>Tipo</th>
+                        <th>Fecha Caducidad</th>
+                        <th>Días Restantes</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-alertas">
+                    <tr><td colspan="5" style="text-align: center; padding: 30px;">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

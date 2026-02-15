@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Verificar Certificado</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body class="verificar-page">
+
+    <header class="verificar-header">
+        <div class="verificar-header-content">
+            <img src="imagenes/logo.png" alt="Logo" class="header-logo">
+            <h1>HalalConnect</h1>
+        </div>
+    </header>
+
+    <main class="verificar-container">
+        <div class="verificar-hero">
+            <h2>Verificador de Certificados Halal</h2>
+            <p>Comprueba al instante si un certificado Halal es auténtico y está vigente</p>
+        </div>
+
+        <div class="verificar-box">
+            <form id="formVerificar">
+                <div class="form-group">
+                    <label>Número de Certificado</label>
+                    <input type="text" id="numero" placeholder="Ejemplo: HALAL-2024-001" required>
+                </div>
+                <button type="submit" class="btn-primary">Verificar Certificado</button>
+            </form>
+
+            <div id="resultado" class="resultado-container"></div>
+        </div>
+
+        <div class="verificar-info">
+            <h3>¿Por qué verificar?</h3>
+            <p>El sello Halal garantiza que un producto o servicio cumple con los principios de la doctrina islámica. Sin embargo, no todos los certificados son auténticos. Con esta herramienta puedes comprobar al instante si el certificado de una empresa es real y está en vigor.</p>
+        </div>
+    </main>
+
+    <footer class="verificar-footer">
+        <p>© 2026 HalalConnect · Sistema de Gestión de Certificaciones Halal</p>
+        <p><a href="index.html">Acceso para empleados</a></p>
+    </footer>
+
+    <script src="js/verificar.js"></script>
+</body>
+</html>

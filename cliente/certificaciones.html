@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Certificaciones</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-brand"><img src="imagenes/logo.png" alt="Logo" class="navbar-logo">HalalConnect</div>
+        <div class="navbar-menu">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="certificaciones.html">Certificaciones</a>
+            <span id="usuario-nombre"></span>
+            <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+             <h2>Gestión de Certificaciones Halal</h2>
+    <div class="header-actions">
+        <button class="btn-secondary" onclick="exportarCSV()">Exportar CSV</button>
+        <button class="btn-add" onclick="abrirModal()">+ Nueva Certificación</button>
+    </div>
+</div>
+
+        <div class="search-bar">
+            <input type="text" id="buscador" placeholder="Buscar por empresa, número de certificado o tipo..." oninput="filtrarCertificaciones()">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Nº Certificado</th>
+                        <th>Tipo</th>
+                        <th>Emisión</th>
+                        <th>Caducidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-certificaciones">
+                    <tr><td colspan="7" style="text-align: center; padding: 30px;">Cargando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modal-titulo">Nueva Certificación</h3>
+            <form id="formCertificacion">
+                <input type="hidden" id="cert-id">
+                <div class="form-group">
+                    <label>Cliente *</label>
+                    <select id="cliente_id" required>
+                        <option value="">Selecciona un cliente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Número de Certificado *</label>
+                    <input type="text" id="numero_certificado" placeholder="HALAL-2024-001" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select id="tipo">
+                        <option value="">Selecciona un tipo</option>
+                        <option value="Alimentación">Alimentación</option>
+                        <option value="Carne">Carne y derivados</option>
+                        <option value="Cosmética">Cosmética</option>
+                        <option value="Bebidas">Bebidas</option>
+                        <option value="Restauración">Restauración</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Emisión *</label>
+                    <input type="date" id="fecha_emision" required>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Caducidad *</label>
+                    <input type="date" id="fecha_caducidad" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/certificaciones.js"></script>
+</body>
+</html>
