@@ -1,3 +1,8 @@
+## Changelog
+
+### v0.1 - Setup inicial
+- Estructura del proyecto creada
+- Conexión a base de datos PostgreSQL configurada
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
