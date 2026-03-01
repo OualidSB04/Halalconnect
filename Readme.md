@@ -3,6 +3,12 @@
 ### v0.1 - Setup inicial
 - Estructura del proyecto creada
 - Conexión a base de datos PostgreSQL configurada
+
+### v0.2 - Modelos del backend
+- Modelo Cliente con operaciones CRUD
+- Modelo Certificacion con detección de caducidad
+- Modelo Usuario con encriptación bcrypt
+- Modelo Contacto vinculado a clientes
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
