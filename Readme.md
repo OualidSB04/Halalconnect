@@ -9,6 +9,11 @@
 - Modelo Certificacion con detección de caducidad
 - Modelo Usuario con encriptación bcrypt
 - Modelo Contacto vinculado a clientes
+
+### v0.3 - Controladores y rutas REST
+- Controladores con la lógica de negocio
+- Definición de rutas REST para todos los recursos
+- API funcional con dieciocho endpoints
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
