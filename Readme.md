@@ -14,6 +14,13 @@
 - Controladores con la lógica de negocio
 - Definición de rutas REST para todos los recursos
 - API funcional con dieciocho endpoints
+
+### v0.4 - Sistema de autenticación
+- Implementación de JWT con tokens de 8 horas
+- Encriptación de contraseñas con bcrypt
+- Middleware verificarToken para rutas protegidas
+- Login funcional con validación de credenciales
+
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
