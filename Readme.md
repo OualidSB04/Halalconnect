@@ -21,6 +21,13 @@
 - Middleware verificarToken para rutas protegidas
 - Login funcional con validación de credenciales
 
+### v0.5 - Frontend del login
+- Página de login con diseño profesional
+- Gestión de sesión con localStorage
+- Redirección automática al dashboard tras login
+- Logo corporativo integrado
+
+
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
