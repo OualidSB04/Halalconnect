@@ -27,6 +27,12 @@
 - Redirección automática al dashboard tras login
 - Logo corporativo integrado
 
+### v0.6 - Dashboard y operaciones CRUD
+- Panel de control con estadísticas en tiempo real
+- CRUD completo de clientes con modal de edición
+- CRUD completo de certificaciones
+- Tabla de alertas para certificados próximos a caducar
+- Sistema de badges con código de colores
 
 # HalalConnect CRM
 
