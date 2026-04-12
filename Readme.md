@@ -34,6 +34,13 @@
 - Tabla de alertas para certificados próximos a caducar
 - Sistema de badges con código de colores
 
+### v0.7 - Sistema de roles
+- Diferenciación entre administrador y empleado
+- Middleware soloAdmin para rutas restringidas
+- Página de gestión de usuarios (solo admin)
+- Navbar adaptativa según el rol del usuario
+- Botones de eliminar ocultos para empleados
+- Protección contra borrarse a sí mismo
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
