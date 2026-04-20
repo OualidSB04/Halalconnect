@@ -41,6 +41,12 @@
 - Navbar adaptativa según el rol del usuario
 - Botones de eliminar ocultos para empleados
 - Protección contra borrarse a sí mismo
+
+### v0.8 - Verificación pública
+- Página pública de verificación sin autenticación
+- Endpoint público GET /api/certificaciones/verificar/:numero
+- Resultados visuales según el estado del certificado
+- Aporta transparencia al sector Halal
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
