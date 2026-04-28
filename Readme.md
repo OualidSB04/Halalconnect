@@ -47,6 +47,14 @@
 - Endpoint público GET /api/certificaciones/verificar/:numero
 - Resultados visuales según el estado del certificado
 - Aporta transparencia al sector Halal
+
+### v0.9 - Funcionalidades avanzadas
+- Búsqueda en tiempo real en clientes y certificaciones
+- Exportación de datos a formato CSV compatible con Excel
+- Gráficos del dashboard con Chart.js
+- Gráfico de tarta con distribución por sector
+- Gráfico de barras con estado de certificaciones
+- Página de perfil personal con cambio de contraseña
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
