@@ -55,6 +55,12 @@
 - Gráfico de tarta con distribución por sector
 - Gráfico de barras con estado de certificaciones
 - Página de perfil personal con cambio de contraseña
+
+### v0.10 - Validaciones y código comentado
+- Validación de datos en backend con express-validator
+- Reglas de validación para clientes, certificaciones y usuarios
+- Comentarios profesionales en todos los archivos del proyecto
+- Refactorización para mayor legibilidad del código
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
