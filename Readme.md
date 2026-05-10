@@ -61,6 +61,12 @@
 - Reglas de validación para clientes, certificaciones y usuarios
 - Comentarios profesionales en todos los archivos del proyecto
 - Refactorización para mayor legibilidad del código
+
+### v1.0 - Versión final
+- README profesional completado
+- Memoria del TFG finalizada
+- Archivo database.sql con estructura de la BD
+- Listo para presentación ante el tribunal
 # HalalConnect CRM
 
 > Sistema de gestión de clientes y certificaciones Halal para el mercado español
