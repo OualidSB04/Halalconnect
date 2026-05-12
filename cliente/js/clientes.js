@@ -1,19 +1,21 @@
 // logica de la pagina de clientes
-// CRUD completo (crear, ver, editar, eliminar) + busqueda + exportar CSV
+// CRUD completo (crear, ver, editar, eliminar) + busqueda + exportar CSV + acceso a contactos
 
 const API_URL = 'http://localhost:5000/api';
 
 const token = localStorage.getItem('token');
 const usuario = JSON.parse(localStorage.getItem('usuario'));
 
+// si no hay token, no estas logueado, te mandamos al login
 if (!token) {
     window.location.href = 'index.html';
 }
 
+// mostramos el nombre del usuario en la navbar (clickable, lleva al perfil)
 const spanUsuario = document.getElementById('usuario-nombre');
 spanUsuario.innerHTML = `<a href="perfil.html" style="color: white; text-decoration: none;">${usuario.nombre}</a>`;
 
-// si es admin, mostramos el enlace a la pagina de usuarios
+// si el usuario es admin, le anadimos un enlace "Usuarios" en la navbar
 function añadirEnlaceUsuarios() {
     if (usuario.rol === 'admin') {
         const menu = document.querySelector('.navbar-menu');
@@ -28,6 +30,7 @@ function añadirEnlaceUsuarios() {
 
 añadirEnlaceUsuarios();
 
+// headers que mandaremos en todas las peticiones para autenticarnos
 const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`
@@ -37,6 +40,7 @@ const headers = {
 // asi la busqueda puede filtrarla sin volver a llamar al backend
 let listaClientes = [];
 
+// cierra sesion borrando el token y el usuario del localStorage
 function cerrarSesion() {
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
@@ -48,6 +52,7 @@ async function cargarClientes() {
     try {
         const respuesta = await fetch(`${API_URL}/clientes`, { headers });
         
+        // si el token caduca o es invalido, te echamos al login
         if (respuesta.status === 401 || respuesta.status === 403) {
             cerrarSesion();
             return;
@@ -85,12 +90,18 @@ function mostrarClientes(clientes) {
                 <td>${cliente.telefono || '-'}</td>
                 <td>${cliente.email || '-'}</td>
                 <td>
+                    <button class="btn-secondary" onclick="verContactos(${cliente.id})">Contactos</button>
                     <button class="btn-edit" onclick="editarCliente(${cliente.id})">Editar</button>
                     ${botonEliminar}
                 </td>
             </tr>
         `;
     });
+}
+
+// abre la pagina de contactos del cliente seleccionado
+function verContactos(id) {
+    window.location.href = `contactos.html?cliente=${id}`;
 }
 
 // filtra la lista de clientes a medida que el usuario escribe en el buscador
@@ -140,7 +151,7 @@ async function editarCliente(id) {
 
 // elimina un cliente despues de confirmar
 async function eliminarCliente(id) {
-    if (!confirm('Estas seguro de eliminar este cliente? Se eliminaran tambien sus contactos y certificados.')) {
+    if (!confirm('¿Estas seguro de eliminar este cliente? Se eliminaran tambien sus contactos y certificados.')) {
         return;
     }
     
@@ -203,14 +214,13 @@ function exportarCSV() {
     ]);
     
     // construimos el CSV: separamos los campos por ; y las filas por salto de linea
-    // las comillas dobles van escapadas con dos comillas dobles (estandar CSV)
     let csv = cabeceras.join(';') + '\n';
     filas.forEach(fila => {
         const filaEscapada = fila.map(campo => `"${String(campo).replace(/"/g, '""')}"`);
         csv += filaEscapada.join(';') + '\n';
     });
     
-    // BOM (Byte Order Mark) para que Excel detecte UTF-8 y muestre las tildes bien
+    // BOM para que Excel detecte UTF-8 y muestre las tildes bien
     const BOM = '\uFEFF';
     const blob = new Blob([BOM + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
