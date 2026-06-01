@@ -81,11 +81,11 @@ El esquema completo está en el archivo `HalalBD.sql`.
 
 3. Configurar las variables de entorno. Crear un archivo `.env` en la carpeta `servidor` con:
 DB_USER=postgres
-DB_PASSWORD=tu_contraseña
+DB_PASSWORD=Neymar10fifa.
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=HalalDB
-JWT_SECRET=tu_clave_secreta
+JWT_SECRET=halalconnect_secret_2024
 PORT=5000
 4. Instalar dependencias y arrancar el backend:
 ```bash
