@@ -1,18 +1,26 @@
-// logica del login
-// envia las credenciales al backend, recibe el token y redirige al dashboard
+// auth.js - logica del login
 
 const API_URL = 'http://localhost:5000/api';
 
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    // preventDefault evita que el formulario recargue la pagina
+// si ya hay sesion activa, vamos directo al dashboard
+if (localStorage.getItem('token')) {
+    window.location.href = 'dashboard.html';
+}
+
+function mostrarError(mensaje) {
+    const alerta = document.getElementById('alerta-login');
+    alerta.textContent = mensaje;
+    alerta.classList.add('show');
+    setTimeout(() => { alerta.classList.remove('show'); }, 4000);
+}
+
+document.getElementById('formLogin').addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const errorMsg = document.getElementById('error-msg');
 
     try {
-        // mandamos email y password al backend
         const respuesta = await fetch(`${API_URL}/usuarios/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -21,22 +29,15 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 
         const datos = await respuesta.json();
 
-        // si la respuesta no es OK, mostramos el error
-        if (!respuesta.ok) {
-            errorMsg.textContent = datos.error || 'Error al iniciar sesion';
-            return;
+        if (respuesta.ok) {
+            // guardamos token y usuario en localStorage
+            localStorage.setItem('token', datos.token);
+            localStorage.setItem('usuario', JSON.stringify(datos.usuario));
+            window.location.href = 'dashboard.html';
+        } else {
+            mostrarError(datos.error || 'Email o contraseña incorrectos');
         }
-
-        // guardamos el token y el usuario en localStorage
-        // localStorage es el almacenamiento del navegador, persiste aunque cierres pestana
-        localStorage.setItem('token', datos.token);
-        localStorage.setItem('usuario', JSON.stringify(datos.usuario));
-
-        // redirigimos al dashboard
-        window.location.href = 'dashboard.html';
-
     } catch (error) {
-        errorMsg.textContent = 'Error de conexion con el servidor';
-        console.error(error);
+        mostrarError('Error de conexión con el servidor');
     }
 });

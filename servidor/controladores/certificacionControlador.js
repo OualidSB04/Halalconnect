@@ -1,9 +1,7 @@
 // controlador de certificaciones halal
-// el corazon del CRM: gestiona los certificados y sus fechas
 
 const Certificacion = require('../modelos/Certificacion');
 
-// GET /api/certificaciones - todas las certificaciones
 const obtenerCertificaciones = async (req, res) => {
     try {
         const certificaciones = await Certificacion.obtenerCertificaciones();
@@ -13,7 +11,6 @@ const obtenerCertificaciones = async (req, res) => {
     }
 };
 
-// GET /api/certificaciones/cliente/:cliente_id - certificaciones de un cliente
 const obtenerCertificacionesPorCliente = async (req, res) => {
     try {
         const certificaciones = await Certificacion.obtenerCertificacionesPorCliente(req.params.cliente_id);
@@ -23,7 +20,6 @@ const obtenerCertificacionesPorCliente = async (req, res) => {
     }
 };
 
-// GET /api/certificaciones/caducando - certificados que vencen en 30 dias
 const obtenerProximasACaducar = async (req, res) => {
     try {
         const certificaciones = await Certificacion.obtenerProximasACaducar();
@@ -33,24 +29,21 @@ const obtenerProximasACaducar = async (req, res) => {
     }
 };
 
-// GET /api/certificaciones/verificar/:numero - verificacion publica
-// es la unica ruta del CRM que NO requiere login
+// verificacion publica por numero de certificado
 const verificarCertificadoPublico = async (req, res) => {
     try {
         const certificado = await Certificacion.verificarCertificadoPublico(req.params.numero);
-        
+
         if (!certificado) {
-            return res.status(404).json({ 
-                valido: false, 
-                mensaje: 'Certificado no encontrado en nuestra base de datos' 
+            return res.status(404).json({
+                valido: false,
+                mensaje: 'Certificado no encontrado en nuestra base de datos'
             });
         }
-        
-        // comprobamos si el certificado ya esta caducado
+
         const hoy = new Date();
-        const fechaCaducidad = new Date(certificado.fecha_caducidad);
-        const caducado = fechaCaducidad < hoy;
-        
+        const caducado = new Date(certificado.fecha_caducidad) < hoy;
+
         res.json({
             valido: !caducado,
             caducado: caducado,
@@ -61,7 +54,28 @@ const verificarCertificadoPublico = async (req, res) => {
     }
 };
 
-// POST /api/certificaciones - crea una certificacion nueva
+// certificado de una empresa (publico) - lo usa el marketplace
+const obtenerCertificadoPublicoPorEmpresa = async (req, res) => {
+    try {
+        const certificado = await Certificacion.obtenerCertificadoPublicoPorEmpresa(req.params.cliente_id);
+
+        if (!certificado) {
+            return res.status(404).json({ tiene: false });
+        }
+
+        const hoy = new Date();
+        const caducado = new Date(certificado.fecha_caducidad) < hoy;
+
+        res.json({
+            tiene: true,
+            caducado: caducado,
+            certificado: certificado
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 const crearCertificacion = async (req, res) => {
     try {
         const { cliente_id, numero_certificado, tipo, fecha_emision, fecha_caducidad } = req.body;
@@ -74,7 +88,6 @@ const crearCertificacion = async (req, res) => {
     }
 };
 
-// PUT /api/certificaciones/:id - actualiza una certificacion existente
 const actualizarCertificacion = async (req, res) => {
     try {
         const { numero_certificado, tipo, fecha_emision, fecha_caducidad, estado } = req.body;
@@ -87,7 +100,6 @@ const actualizarCertificacion = async (req, res) => {
     }
 };
 
-// DELETE /api/certificaciones/:id - borra una certificacion
 const eliminarCertificacion = async (req, res) => {
     try {
         await Certificacion.eliminarCertificacion(req.params.id);
@@ -102,6 +114,7 @@ module.exports = {
     obtenerCertificacionesPorCliente,
     obtenerProximasACaducar,
     verificarCertificadoPublico,
+    obtenerCertificadoPublicoPorEmpresa,
     crearCertificacion,
     actualizarCertificacion,
     eliminarCertificacion

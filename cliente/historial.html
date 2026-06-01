@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Historial</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div class="app-layout">
+
+        <div class="topbar">
+            <div>
+                <div class="topbar-title">Historial de Acciones</div>
+                <div class="topbar-subtitle">Registro de actividad de la plataforma (auditoría)</div>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Acción</th>
+                            <th>Sección</th>
+                            <th>Fecha y hora</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-historial">
+                        <tr><td colspan="4" style="text-align:center;padding:30px;color:#64748b">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/sidebar.js"></script>
+    <script>generarSidebar('historial');</script>
+    <script src="js/historial.js"></script>
+</body>
+</html>

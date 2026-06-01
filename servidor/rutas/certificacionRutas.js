@@ -9,15 +9,19 @@ const {
     obtenerCertificacionesPorCliente,
     obtenerProximasACaducar,
     verificarCertificadoPublico,
+    obtenerCertificadoPublicoPorEmpresa,
     crearCertificacion,
     actualizarCertificacion,
     eliminarCertificacion
 } = require('../controladores/certificacionControlador');
 
-// esta ruta es publica, NO requiere login, cualquier consumidor puede verificar un certificado halal
+// RUTAS PUBLICAS (sin login)
+// verificar un certificado por su numero
 router.get('/verificar/:numero', verificarCertificadoPublico);
+// certificado de una empresa, para el marketplace
+router.get('/publico/empresa/:cliente_id', obtenerCertificadoPublicoPorEmpresa);
 
-// estas si requieren login
+// RUTAS PRIVADAS (requieren login)
 router.get('/', verificarToken, obtenerCertificaciones);
 router.get('/caducando', verificarToken, obtenerProximasACaducar);
 router.get('/cliente/:cliente_id', verificarToken, obtenerCertificacionesPorCliente);

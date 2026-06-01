@@ -1,192 +1,136 @@
-// logica del dashboard
-// muestra estadisticas, graficos y certificados proximos a caducar
+// dashboard.js - logica del panel principal
+// carga estadisticas y graficos de la plataforma
 
-const API_URL = 'http://localhost:5000/api';
-
-// recuperamos el token y los datos del usuario logueado
-const token = localStorage.getItem('token');
-const usuario = JSON.parse(localStorage.getItem('usuario'));
-
-// si no hay token, no estas logueado, te mandamos al login
-if (!token) {
-    window.location.href = 'index.html';
-}
-
-// mostramos el nombre del usuario en la navbar (clickable, lleva al perfil)
-const spanUsuario = document.getElementById('usuario-nombre');
-spanUsuario.innerHTML = `<a href="perfil.html" style="color: white; text-decoration: none;">${usuario.nombre}</a>`;
-
-// si el usuario es admin, le anadimos un enlace "Usuarios" en la navbar
-function añadirEnlaceUsuarios() {
-    if (usuario.rol === 'admin') {
-        const menu = document.querySelector('.navbar-menu');
-        const enlaceUsuarios = document.createElement('a');
-        enlaceUsuarios.href = 'usuarios.html';
-        enlaceUsuarios.textContent = 'Usuarios';
-        
-        const certEnlace = menu.querySelector('a[href="certificaciones.html"]');
-        certEnlace.insertAdjacentElement('afterend', enlaceUsuarios);
-    }
-}
-
-añadirEnlaceUsuarios();
-
-// headers que mandaremos en todas las peticiones para autenticarnos
 const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`
 };
 
-// cierra sesion borrando el token y el usuario del localStorage
-function cerrarSesion() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    window.location.href = 'index.html';
+// muestra la fecha de hoy en el topbar
+const fechaHoy = document.getElementById('fecha-hoy');
+if (fechaHoy) {
+    fechaHoy.textContent = new Date().toLocaleDateString('es-ES', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
 }
 
-// carga todos los datos del dashboard
 async function cargarDashboard() {
     try {
-        // primero traemos los clientes para contar el total
-        const respClientes = await fetch(`${API_URL}/clientes`, { headers });
-        
-        // si el token caduca o es invalido, te echamos al login
-        if (respClientes.status === 401 || respClientes.status === 403) {
-            cerrarSesion();
-            return;
-        }
-        
-        const clientes = await respClientes.json();
-        document.getElementById('total-clientes').textContent = clientes.length;
+        const [resClientes, resCerts, resProductos, resEstablecimientos] = await Promise.all([
+            fetch(`${API_URL}/clientes`, { headers }),
+            fetch(`${API_URL}/certificaciones`, { headers }),
+            fetch(`${API_URL}/productos`, { headers }),
+            fetch(`${API_URL}/establecimientos`, { headers })
+        ]);
 
-        // ahora traemos las certificaciones para calcular estados
-        const respCerts = await fetch(`${API_URL}/certificaciones`, { headers });
-        const certificaciones = await respCerts.json();
-        
+        const clientes = await resClientes.json();
+        const certs = await resCerts.json();
+        const productos = await resProductos.json();
+        const establecimientos = await resEstablecimientos.json();
+
         const hoy = new Date();
-        let activos = 0;
-        let caducados = 0;
-        let proximos = 0;
-        
-        // recorremos cada certificado y lo clasificamos segun su fecha
-        certificaciones.forEach(cert => {
-            const fechaCad = new Date(cert.fecha_caducidad);
-            const diasRestantes = Math.ceil((fechaCad - hoy) / (1000 * 60 * 60 * 24));
-            
-            if (diasRestantes < 0) {
-                caducados++;
-            } else if (diasRestantes <= 30) {
-                proximos++;
-                activos++;
-            } else {
-                activos++;
+
+        // clasificamos los certificados segun su estado
+        const activos = certs.filter(c => {
+            const dias = Math.ceil((new Date(c.fecha_caducidad) - hoy) / (1000 * 60 * 60 * 24));
+            return dias > 30;
+        });
+        const proximos = certs.filter(c => {
+            const dias = Math.ceil((new Date(c.fecha_caducidad) - hoy) / (1000 * 60 * 60 * 24));
+            return dias >= 0 && dias <= 30;
+        });
+        const caducados = certs.filter(c => {
+            const dias = Math.ceil((new Date(c.fecha_caducidad) - hoy) / (1000 * 60 * 60 * 24));
+            return dias < 0;
+        });
+
+        // actualizamos las tarjetas de stats
+        document.getElementById('total-clientes').textContent = clientes.length;
+        document.getElementById('total-activos').textContent = activos.length;
+        document.getElementById('total-proximos').textContent = proximos.length;
+        document.getElementById('total-caducados').textContent = caducados.length;
+        document.getElementById('total-productos').textContent = productos.length;
+        document.getElementById('total-establecimientos').textContent = establecimientos.length;
+
+        // grafico de sectores
+        const sectores = {};
+        clientes.forEach(c => {
+            const sector = c.sector || 'Sin sector';
+            sectores[sector] = (sectores[sector] || 0) + 1;
+        });
+
+        new Chart(document.getElementById('graficaSectores'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(sectores),
+                datasets: [{
+                    data: Object.values(sectores),
+                    backgroundColor: ['#10b981', '#f59e0b', '#60a5fa', '#f87171', '#a78bfa'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#94a3b8', font: { size: 12 } }
+                    }
+                }
             }
         });
-        
-        document.getElementById('total-certificados').textContent = activos;
-        document.getElementById('caducados').textContent = caducados;
-        document.getElementById('proximos-caducar').textContent = proximos;
 
-        // creamos los graficos con los datos calculados
-        crearGraficoSectores(clientes);
-        crearGraficoEstados(activos - proximos, proximos, caducados);
+        // grafico de estados
+        new Chart(document.getElementById('graficaEstados'), {
+            type: 'bar',
+            data: {
+                labels: ['Activos', 'Proximos a caducar', 'Caducados'],
+                datasets: [{
+                    data: [activos.length, proximos.length, caducados.length],
+                    backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                    borderRadius: 6,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+                    y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }
+                }
+            }
+        });
 
-        // tabla de certificados que caducan en los proximos 30 dias
-        const respCaducando = await fetch(`${API_URL}/certificaciones/caducando`, { headers });
-        const caducando = await respCaducando.json();
-
+        // tabla de alertas
         const tbody = document.getElementById('tabla-alertas');
-        
-        if (caducando.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 30px;">No hay certificados proximos a caducar</td></tr>';
+        const alertas = [...proximos, ...caducados].slice(0, 10);
+
+        if (alertas.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:30px;color:#64748b">No hay alertas pendientes</td></tr>';
             return;
         }
-        
+
         tbody.innerHTML = '';
-        caducando.forEach(cert => {
-            const fechaCad = new Date(cert.fecha_caducidad);
-            const diasRestantes = Math.ceil((fechaCad - hoy) / (1000 * 60 * 60 * 24));
-            const fechaFormat = fechaCad.toLocaleDateString('es-ES');
-            
-            // el color del badge cambia segun la urgencia
-            let badge = 'badge-success';
-            if (diasRestantes <= 7) badge = 'badge-danger';
-            else if (diasRestantes <= 15) badge = 'badge-warning';
-            
+        alertas.forEach(c => {
+            const dias = Math.ceil((new Date(c.fecha_caducidad) - hoy) / (1000 * 60 * 60 * 24));
+            let badge = '';
+            if (dias < 0) badge = '<span class="badge-estado badge-caducado">Caducado</span>';
+            else if (dias <= 30) badge = `<span class="badge-estado badge-pendiente">${dias} dias</span>`;
+
             tbody.innerHTML += `
                 <tr>
-                    <td>${cert.nombre_empresa}</td>
-                    <td>${cert.numero_certificado}</td>
-                    <td>${cert.tipo || '-'}</td>
-                    <td>${fechaFormat}</td>
-                    <td><span class="badge ${badge}">${diasRestantes} dias</span></td>
+                    <td><strong style="color:#f8fafc">${c.nombre_empresa || '-'}</strong></td>
+                    <td style="color:#10b981">${c.numero_certificado}</td>
+                    <td>${c.tipo || '-'}</td>
+                    <td>${new Date(c.fecha_caducidad).toLocaleDateString('es-ES')}</td>
+                    <td>${badge}</td>
                 </tr>
             `;
         });
 
     } catch (error) {
         console.error('Error al cargar dashboard:', error);
-        alert('Error al conectar con el servidor');
     }
-}
-
-// grafico de tarta con la distribucion de clientes por sector
-function crearGraficoSectores(clientes) {
-    // agrupamos los clientes por sector y contamos cuantos hay de cada uno
-    const sectores = {};
-    clientes.forEach(c => {
-        const sector = c.sector || 'Sin sector';
-        sectores[sector] = (sectores[sector] || 0) + 1;
-    });
-
-    const ctx = document.getElementById('grafico-sectores').getContext('2d');
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: Object.keys(sectores),
-            datasets: [{
-                data: Object.values(sectores),
-                backgroundColor: ['#2e75b6', '#28a745', '#ffc107', '#dc3545', '#6c757d', '#17a2b8', '#fd7e14'],
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { padding: 15, font: { size: 13 } }
-                }
-            }
-        }
-    });
-}
-
-// grafico de barras con los estados de las certificaciones
-function crearGraficoEstados(activos, proximos, caducados) {
-    const ctx = document.getElementById('grafico-estados').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Activos', 'Proximos a caducar', 'Caducados'],
-            datasets: [{
-                label: 'Cantidad',
-                data: [activos, proximos, caducados],
-                backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1 } }
-            }
-        }
-    });
 }
 
 cargarDashboard();

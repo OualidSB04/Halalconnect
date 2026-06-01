@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Establecimientos</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div class="app-layout">
+
+        <div class="topbar">
+            <div>
+                <div class="topbar-title">Establecimientos</div>
+                <div class="topbar-subtitle">Directorio de tiendas y restaurantes Halal</div>
+            </div>
+            <div class="topbar-actions">
+                <input type="text" id="buscador" placeholder="Buscar establecimiento..." oninput="filtrarEstablecimientos()">
+                <button class="btn-add" onclick="abrirModal()">+ Nuevo Establecimiento</button>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Ciudad</th>
+                            <th>Direccion</th>
+                            <th>Telefono</th>
+                            <th>Empresa</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-establecimientos">
+                        <tr><td colspan="7" style="text-align:center;padding:30px;color:#64748b">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <h3 id="modal-titulo">Nuevo Establecimiento</h3>
+            <form id="formEstablecimiento">
+                <input type="hidden" id="establecimiento-id">
+                <div class="form-group">
+                    <label>Empresa Cliente *</label>
+                    <select id="cliente_id" required>
+                        <option value="">Selecciona empresa...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Ciudad</label>
+                    <select id="ciudad_id">
+                        <option value="">Selecciona ciudad...</option>
+                        <option value="41">Madrid</option>
+                        <option value="42">Barcelona</option>
+                        <option value="43">Valencia</option>
+                        <option value="44">Sevilla</option>
+                        <option value="45">Murcia</option>
+                        <option value="46">Malaga</option>
+                        <option value="47">Zaragoza</option>
+                        <option value="48">Granada</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nombre *</label>
+                    <input type="text" id="nombre" required placeholder="Ej: Carniceria Al-Halal">
+                </div>
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select id="tipo">
+                        <option value="Restaurante">Restaurante</option>
+                        <option value="Carniceria">Carniceria</option>
+                        <option value="Supermercado">Supermercado</option>
+                        <option value="Tienda">Tienda</option>
+                        <option value="Panaderia">Panaderia</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Direccion</label>
+                    <input type="text" id="direccion" placeholder="Ej: Calle Mayor 45">
+                </div>
+                <div class="form-group">
+                    <label>Telefono</label>
+                    <input type="text" id="telefono" placeholder="Ej: 912345678">
+                </div>
+                <div class="form-group">
+                    <label>Latitud</label>
+                    <input type="number" id="latitud" step="0.00000001" placeholder="Ej: 40.41680000">
+                </div>
+                <div class="form-group">
+                    <label>Longitud</label>
+                    <input type="number" id="longitud" step="0.00000001" placeholder="Ej: -3.70380000">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script src="js/sidebar.js"></script>
+<script>generarSidebar('establecimientos');</script>
+<script src="js/establecimientos.js"></script>
+</body>
+</html>

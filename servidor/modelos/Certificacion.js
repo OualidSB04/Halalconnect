@@ -4,7 +4,6 @@
 const pool = require('../configuracion/HalalconnectDB');
 
 // trae todas las certificaciones con el nombre de la empresa
-// el JOIN es pa no tener que hacer dos consultas separadas
 const obtenerCertificaciones = async () => {
     const resultado = await pool.query(
         `SELECT c.*, cl.nombre_empresa 
@@ -24,7 +23,6 @@ const obtenerCertificacionesPorCliente = async (cliente_id) => {
 };
 
 // trae las certificaciones que van a caducar en los proximos 30 dias
-// esto es lo que da valor real al CRM: las alertas automaticas
 const obtenerProximasACaducar = async () => {
     const resultado = await pool.query(
         `SELECT c.*, cl.nombre_empresa 
@@ -36,8 +34,22 @@ const obtenerProximasACaducar = async () => {
     return resultado.rows;
 };
 
+// busca el certificado vigente de una empresa (publico, para el marketplace)
+// devuelve el que caduca mas tarde, asi cogemos el mas actual
+const obtenerCertificadoPublicoPorEmpresa = async (cliente_id) => {
+    const resultado = await pool.query(
+        `SELECT c.numero_certificado, c.tipo, c.fecha_emision, c.fecha_caducidad, c.estado,
+                cl.nombre_empresa
+         FROM certificaciones c
+         JOIN clientes cl ON c.cliente_id = cl.id
+         WHERE c.cliente_id = $1
+         ORDER BY c.fecha_caducidad DESC
+         LIMIT 1`, [cliente_id]
+    );
+    return resultado.rows[0];
+};
+
 // busca un certificado por su numero para la verificacion publica
-// no requiere login, es accesible para cualquiera
 const verificarCertificadoPublico = async (numero) => {
     const resultado = await pool.query(
         `SELECT c.numero_certificado, c.tipo, c.fecha_emision, c.fecha_caducidad, c.estado,
@@ -76,6 +88,7 @@ module.exports = {
     obtenerCertificaciones,
     obtenerCertificacionesPorCliente,
     obtenerProximasACaducar,
+    obtenerCertificadoPublicoPorEmpresa,
     verificarCertificadoPublico,
     crearCertificacion,
     actualizarCertificacion,

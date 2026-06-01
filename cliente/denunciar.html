@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Reportar Producto</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        .mk-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 40px; background: rgba(10,15,29,0.85);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .mk-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .mk-brand-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; font-size: 20px;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .mk-brand-name { font-size: 18px; font-weight: 800; color: var(--text); }
+        .mk-brand-sub { font-size: 11px; color: var(--text-dim); }
+        .mk-nav-links { display: flex; align-items: center; gap: 8px; }
+        .mk-nav-links a {
+            color: var(--text-muted); text-decoration: none; font-size: 14px;
+            padding: 9px 16px; border-radius: 10px; transition: all 0.2s ease;
+        }
+        .mk-nav-links a:hover { color: var(--text); background: var(--bg-surface-2); }
+
+        .den-container { max-width: 600px; margin: 0 auto; padding: 50px 40px; }
+        .den-head { text-align: center; margin-bottom: 32px; }
+        .den-icon {
+            width: 70px; height: 70px; margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--red), #b91c1c);
+            border-radius: 18px; display: flex; align-items: center;
+            justify-content: center; font-size: 34px;
+            box-shadow: 0 8px 24px rgba(239,68,68,0.3);
+        }
+        .den-head h1 {
+            font-size: 30px; font-weight: 800; color: var(--text);
+            letter-spacing: -0.02em; margin-bottom: 10px;
+        }
+        .den-head p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+        .den-card {
+            background: var(--bg-surface); border: 1px solid var(--border);
+            border-radius: 18px; padding: 30px;
+        }
+        .den-info {
+            background: rgba(96,165,250,0.1); border-left: 3px solid var(--blue);
+            padding: 14px 16px; border-radius: 0 10px 10px 0;
+            font-size: 13px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="mk-nav">
+        <a href="marketplace.html" class="mk-brand">
+            <div class="mk-brand-icon">☪</div>
+            <div>
+                <div class="mk-brand-name">HalalConnect</div>
+                <div class="mk-brand-sub">Marketplace Halal de confianza</div>
+            </div>
+        </a>
+        <div class="mk-nav-links">
+            <a href="marketplace.html">Productos</a>
+            <a href="market_map.html">Tiendas</a>
+            <a href="verificar.html">Verificar</a>
+            <a href="denunciar.html">Reportar</a>
+        </div>
+    </nav>
+
+    <div class="den-container">
+        <div class="den-head">
+            <div class="den-icon">🚨</div>
+            <h1>Reportar Producto Sospechoso</h1>
+            <p>Ayuda a proteger la comunidad Halal reportando productos que se venden como Halal sin estarlo</p>
+        </div>
+
+        <div class="den-card">
+            <div class="den-info">
+                Tu reporte será revisado por nuestro equipo. Puedes enviarlo de forma anónima
+                o dejar tu email para recibir seguimiento.
+            </div>
+
+            <div class="alert alert-success" id="alerta-exito">
+                ✓ ¡Reporte enviado correctamente! Gracias por ayudar a proteger la comunidad Halal.
+            </div>
+            <div class="alert alert-error" id="alerta-error">
+                Error al enviar el reporte. Inténtalo de nuevo.
+            </div>
+
+            <form id="formDenuncia">
+                <div class="form-group">
+                    <label>Nombre del Producto *</label>
+                    <input type="text" id="producto_nombre" required placeholder="Ej: Salchichas marca X">
+                </div>
+                <div class="form-group">
+                    <label>Establecimiento donde lo viste</label>
+                    <input type="text" id="establecimiento" placeholder="Ej: Supermercado de Calle Mayor, Madrid">
+                </div>
+                <div class="form-group">
+                    <label>Descripción del problema *</label>
+                    <textarea id="descripcion" rows="4" required placeholder="Describe por qué crees que este producto no es Halal..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Tu email (opcional)</label>
+                    <input type="email" id="email_denunciante" placeholder="Para recibir seguimiento">
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%;padding:15px;font-size:15px">
+                    Enviar Reporte
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+
+        document.getElementById('formDenuncia').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const datos = {
+                producto_nombre: document.getElementById('producto_nombre').value,
+                establecimiento: document.getElementById('establecimiento').value,
+                descripcion: document.getElementById('descripcion').value,
+                email_denunciante: document.getElementById('email_denunciante').value
+            };
+            try {
+                const respuesta = await fetch(`${API_URL}/denuncias/publico`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+                if (respuesta.ok) {
+                    document.getElementById('alerta-exito').classList.add('show');
+                    document.getElementById('alerta-error').classList.remove('show');
+                    document.getElementById('formDenuncia').reset();
+                    setTimeout(() => document.getElementById('alerta-exito').classList.remove('show'), 5000);
+                } else {
+                    document.getElementById('alerta-error').classList.add('show');
+                }
+            } catch (error) {
+                document.getElementById('alerta-error').classList.add('show');
+            }
+        });
+    </script>
+    <script src="js/chatbot.js"></script>
+</body>
+</html>

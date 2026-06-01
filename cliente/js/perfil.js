@@ -1,150 +1,91 @@
-// logica de "Mi Perfil"
-// cada usuario puede ver y modificar sus datos personales y cambiar la contrasena
-
-const API_URL = 'http://localhost:5000/api';
-
-const token = localStorage.getItem('token');
-// le ponemos let en vez de const porque vamos a actualizar el usuario cuando edite
-let usuario = JSON.parse(localStorage.getItem('usuario'));
-
-if (!token) {
-    window.location.href = 'index.html';
-}
-
-const spanUsuario = document.getElementById('usuario-nombre');
-spanUsuario.innerHTML = `<a href="perfil.html" style="color: white; text-decoration: none;">${usuario.nombre}</a>`;
-
-function añadirEnlaceUsuarios() {
-    if (usuario.rol === 'admin') {
-        const menu = document.querySelector('.navbar-menu');
-        const enlaceUsuarios = document.createElement('a');
-        enlaceUsuarios.href = 'usuarios.html';
-        enlaceUsuarios.textContent = 'Usuarios';
-        
-        const certEnlace = menu.querySelector('a[href="certificaciones.html"]');
-        certEnlace.insertAdjacentElement('afterend', enlaceUsuarios);
-    }
-}
-
-añadirEnlaceUsuarios();
+// perfil.js - gestion del perfil propio del usuario
 
 const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`
 };
 
-function cerrarSesion() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('usuario');
-    window.location.href = 'index.html';
+function obtenerIniciales(nombre) {
+    if (!nombre) return 'U';
+    const partes = nombre.split(' ');
+    if (partes.length >= 2) return partes[0][0] + partes[1][0];
+    return nombre[0].toUpperCase();
 }
 
-// trae los datos del usuario logueado del backend
 async function cargarPerfil() {
     try {
         const respuesta = await fetch(`${API_URL}/usuarios/mi-perfil`, { headers });
-        
-        if (respuesta.status === 401 || respuesta.status === 403) {
-            cerrarSesion();
-            return;
-        }
-        
-        const datos = await respuesta.json();
-        
-        // rellenamos el formulario con los datos actuales
-        document.getElementById('nombre').value = datos.nombre;
-        document.getElementById('email').value = datos.email;
-        // rol y fecha son solo informativos (disabled en el HTML)
-        document.getElementById('rol').value = datos.rol === 'admin' ? 'Administrador' : 'Empleado';
-        document.getElementById('creado_en').value = new Date(datos.creado_en).toLocaleDateString('es-ES');
-    } catch (error) {
-        console.error('Error al cargar perfil:', error);
-        alert('Error al conectar con el servidor');
-    }
+        const perfil = await respuesta.json();
+
+        document.getElementById('nombre').value = perfil.nombre;
+        document.getElementById('email').value = perfil.email;
+        document.getElementById('avatar-grande').textContent = obtenerIniciales(perfil.nombre);
+        document.getElementById('nombre-display').textContent = perfil.nombre;
+        document.getElementById('rol-display').textContent = perfil.rol;
+    } catch (error) { console.error('Error al cargar perfil:', error); }
 }
 
-// formulario para actualizar nombre y email
+function mostrarAlerta(id, tipo, mensaje) {
+    const alerta = document.getElementById(id);
+    alerta.textContent = mensaje;
+    alerta.className = `alert alert-${tipo} show`;
+    setTimeout(() => { alerta.className = 'alert'; }, 4000);
+}
+
 document.getElementById('formPerfil').addEventListener('submit', async (e) => {
     e.preventDefault();
-    
-    const datos = {
-        nombre: document.getElementById('nombre').value,
-        email: document.getElementById('email').value
-    };
-    
     try {
         const respuesta = await fetch(`${API_URL}/usuarios/mi-perfil`, {
             method: 'PUT',
             headers,
-            body: JSON.stringify(datos)
+            body: JSON.stringify({
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('email').value
+            })
         });
-        
-        if (!respuesta.ok) {
-            const error = await respuesta.json();
-            alert(error.error || 'Error al actualizar el perfil');
-            return;
+        if (respuesta.ok) {
+            mostrarAlerta('alerta-perfil', 'success', 'Perfil actualizado correctamente');
+            const datos = await respuesta.json();
+            localStorage.setItem('usuario', JSON.stringify(datos));
+            document.getElementById('avatar-grande').textContent = obtenerIniciales(datos.nombre);
+            document.getElementById('nombre-display').textContent = datos.nombre;
+        } else {
+            mostrarAlerta('alerta-perfil', 'error', 'Error al actualizar el perfil');
         }
-        
-        const usuarioActualizado = await respuesta.json();
-        
-        // actualizamos los datos en el localStorage para que se reflejen en toda la app
-        usuario.nombre = usuarioActualizado.nombre;
-        usuario.email = usuarioActualizado.email;
-        localStorage.setItem('usuario', JSON.stringify(usuario));
-        
-        // refrescamos el nombre en la navbar al instante (sin recargar)
-        document.getElementById('usuario-nombre').innerHTML = `<a href="perfil.html" style="color: white; text-decoration: none;">${usuario.nombre}</a>`;
-        
-        // mensaje de exito que se borra solo despues de 3 segundos
-        const mensaje = document.getElementById('mensaje-perfil');
-        mensaje.textContent = 'Perfil actualizado correctamente';
-        setTimeout(() => { mensaje.textContent = ''; }, 3000);
-    } catch (error) {
-        alert('Error al guardar los cambios');
-    }
+    } catch (error) { mostrarAlerta('alerta-perfil', 'error', 'Error de conexion'); }
 });
 
-// formulario para cambiar la contrasena
 document.getElementById('formPassword').addEventListener('submit', async (e) => {
     e.preventDefault();
-    
-    const passwordActual = document.getElementById('passwordActual').value;
-    const passwordNueva = document.getElementById('passwordNueva').value;
-    const passwordConfirmar = document.getElementById('passwordConfirmar').value;
-    const mensaje = document.getElementById('mensaje-password');
-    
-    // validaciones del lado del cliente (las del servidor son las que cuentan de verdad)
-    if (passwordNueva !== passwordConfirmar) {
-        mensaje.textContent = 'Las contrasenas no coinciden';
+    const nueva = document.getElementById('password_nueva').value;
+    const confirmar = document.getElementById('password_confirmar').value;
+
+    if (nueva !== confirmar) {
+        mostrarAlerta('alerta-password', 'error', 'Las contrasenas no coinciden');
         return;
     }
-    
-    if (passwordNueva.length < 6) {
-        mensaje.textContent = 'La contrasena debe tener al menos 6 caracteres';
+    if (nueva.length < 6) {
+        mostrarAlerta('alerta-password', 'error', 'Minimo 6 caracteres');
         return;
     }
-    
+
     try {
         const respuesta = await fetch(`${API_URL}/usuarios/cambiar-password`, {
             method: 'PUT',
             headers,
-            body: JSON.stringify({ passwordActual, passwordNueva })
+            body: JSON.stringify({
+                password_actual: document.getElementById('password_actual').value,
+                password_nueva: nueva
+            })
         });
-        
-        const datos = await respuesta.json();
-        
-        if (!respuesta.ok) {
-            // si la contrasena actual es incorrecta, el backend nos lo dice
-            mensaje.textContent = datos.error || 'Error al cambiar la contrasena';
-            return;
+        if (respuesta.ok) {
+            mostrarAlerta('alerta-password', 'success', 'Contrasena cambiada correctamente');
+            document.getElementById('formPassword').reset();
+        } else {
+            const error = await respuesta.json();
+            mostrarAlerta('alerta-password', 'error', error.error || 'Error al cambiar la contrasena');
         }
-        
-        mensaje.textContent = '';
-        document.getElementById('formPassword').reset();
-        alert('Contrasena actualizada correctamente');
-    } catch (error) {
-        mensaje.textContent = 'Error al cambiar la contrasena';
-    }
+    } catch (error) { mostrarAlerta('alerta-password', 'error', 'Error de conexion'); }
 });
 
 cargarPerfil();

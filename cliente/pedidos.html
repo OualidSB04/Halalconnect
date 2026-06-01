@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Pedidos</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div class="app-layout">
+
+        <div class="topbar">
+            <div>
+                <div class="topbar-title">Pedidos</div>
+                <div class="topbar-subtitle">Compras realizadas en el marketplace</div>
+            </div>
+        </div>
+
+        <div class="page-content">
+
+            <div class="stats-grid" style="margin-bottom:24px">
+                <div class="stat-card">
+                    <div class="stat-card-label">Total Pedidos</div>
+                    <div class="stat-card-value green" id="total-pedidos">0</div>
+                    <div class="stat-card-desc">Compras registradas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Ingresos Totales</div>
+                    <div class="stat-card-value green" id="total-ingresos">0 €</div>
+                    <div class="stat-card-desc">Suma de todos los pedidos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Ticket Medio</div>
+                    <div class="stat-card-value blue" id="ticket-medio">0 €</div>
+                    <div class="stat-card-desc">Promedio por pedido</div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pedido</th>
+                            <th>Cliente</th>
+                            <th>Email</th>
+                            <th>Dirección</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-pedidos">
+                        <tr><td colspan="8" style="text-align:center;padding:30px;color:#64748b">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal-overlay" id="modal-detalle">
+        <div class="modal">
+            <h3 id="modal-titulo-detalle">Detalle</h3>
+            <div id="detalle-contenido"></div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-primary" onclick="cerrarDetalle()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/sidebar.js"></script>
+    <script>generarSidebar('pedidos');</script>
+    <script src="js/pedidos.js"></script>
+</body>
+</html>

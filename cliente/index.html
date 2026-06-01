@@ -5,39 +5,150 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HalalConnect — Iniciar Sesión</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: #0f172a;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-bg-glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: #10b981;
+            border-radius: 50%;
+            filter: blur(180px);
+            opacity: 0.15;
+            top: -100px;
+            right: -100px;
+        }
+        .login-bg-glow2 {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: #f59e0b;
+            border-radius: 50%;
+            filter: blur(180px);
+            opacity: 0.1;
+            bottom: -100px;
+            left: -100px;
+        }
+        .login-box {
+            background: #1e293b;
+            border: 0.5px solid #334155;
+            border-radius: 20px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            z-index: 10;
+        }
+        .login-logo {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .login-logo-icon {
+            width: 64px;
+            height: 64px;
+            background: #10b981;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+        }
+        .login-logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 6px;
+        }
+        .login-logo p {
+            font-size: 14px;
+            color: #64748b;
+        }
+        .login-box .form-group input {
+            padding: 12px 16px;
+            font-size: 15px;
+        }
+        .btn-login {
+            width: 100%;
+            background: #10b981;
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            margin-top: 8px;
+        }
+        .btn-login:hover {
+            background: #059669;
+        }
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 0.5px solid #334155;
+        }
+        .login-footer a {
+            color: #10b981;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+        .login-public-links {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .login-public-links a {
+            color: #64748b;
+            font-size: 13px;
+        }
+    </style>
 </head>
-<body class="login-page">
+<body>
+    <div class="login-page">
+        <div class="login-bg-glow"></div>
+        <div class="login-bg-glow2"></div>
 
-    <div class="login-wrapper">
-        <div class="login-left">
-            <div class="login-brand">
-                <img src="imagenes/logo.png" alt="HalalConnect Logo" class="brand-logo">
+        <div class="login-box">
+            <div class="login-logo">
+                <div class="login-logo-icon">☪</div>
                 <h1>HalalConnect</h1>
+                <p>Plataforma del sector Halal en España</p>
             </div>
-            <p class="login-tagline">Sistema profesional de gestión<br>de certificaciones Halal</p>
-        </div>
-        
-        <div class="login-right">
-            <div class="login-form-container">
-                <h2>Bienvenido</h2>
-                <p class="login-subtitle">Introduce tus credenciales para acceder</p>
 
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="email" placeholder="tu@email.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Contraseña</label>
-                        <input type="password" id="password" placeholder="••••••••" required>
-                    </div>
-                    <button type="submit" class="btn-primary">Iniciar Sesión</button>
-                    <p id="error-msg" class="error-msg"></p>
-                </form>
-                
-                <div class="login-footer">
-                    <p><a href="verificar.html">Verificar un certificado Halal</a></p>
-                    <p>© 2026 HalalConnect · Oualid S'Baai</p>
+            <div id="alerta-login" class="alert alert-error"></div>
+
+            <form id="formLogin">
+                <div class="form-group">
+                    <label>Correo electrónico</label>
+                    <input type="email" id="email" required placeholder="tu@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="password" required placeholder="Tu contraseña">
+                </div>
+                <button type="submit" class="btn-login">Iniciar Sesión</button>
+            </form>
+
+            <div class="login-footer">
+                <div class="login-public-links">
+                    <a href="verificar.html">Verificar certificado</a>
+                    <a href="denunciar.html">Denunciar producto</a>
                 </div>
             </div>
         </div>

@@ -5,45 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HalalConnect — Verificar Certificado</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        .mk-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 40px; background: rgba(10,15,29,0.85);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .mk-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .mk-brand-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; font-size: 20px;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .mk-brand-name { font-size: 18px; font-weight: 800; color: var(--text); }
+        .mk-brand-sub { font-size: 11px; color: var(--text-dim); }
+        .mk-nav-links { display: flex; align-items: center; gap: 8px; }
+        .mk-nav-links a {
+            color: var(--text-muted); text-decoration: none; font-size: 14px;
+            padding: 9px 16px; border-radius: 10px; transition: all 0.2s ease;
+        }
+        .mk-nav-links a:hover { color: var(--text); background: var(--bg-surface-2); }
+
+        .ver-container { max-width: 600px; margin: 0 auto; padding: 50px 40px; }
+        .ver-head { text-align: center; margin-bottom: 36px; }
+        .ver-icon {
+            width: 70px; height: 70px; margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 18px; display: flex; align-items: center;
+            justify-content: center; font-size: 34px;
+            box-shadow: 0 8px 24px var(--primary-glow);
+        }
+        .ver-head h1 {
+            font-size: 30px; font-weight: 800; color: var(--text);
+            letter-spacing: -0.02em; margin-bottom: 10px;
+        }
+        .ver-head p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+        .ver-search {
+            display: flex; gap: 10px; margin-bottom: 30px;
+        }
+        .ver-search input {
+            flex: 1; padding: 15px 18px; background: var(--bg-surface);
+            border: 1px solid var(--border); border-radius: 12px;
+            color: var(--text); font-size: 15px; font-family: inherit;
+        }
+        .ver-search input:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        .ver-search button {
+            padding: 15px 28px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff; border: none; border-radius: 12px; font-size: 15px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+        }
+        .ver-search button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px var(--primary-glow); }
+
+        .ver-resultado { display: none; animation: fadeInUp 0.4s ease; }
+        .ver-resultado.show { display: block; }
+        .ver-card {
+            border-radius: 18px; padding: 28px; border: 1px solid var(--border);
+        }
+        .ver-card.valido {
+            background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04));
+            border-color: rgba(16,185,129,0.3);
+        }
+        .ver-card.caducado {
+            background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.04));
+            border-color: rgba(245,158,11,0.3);
+        }
+        .ver-card.invalido {
+            background: linear-gradient(135deg, rgba(239,68,68,0.12), rgba(239,68,68,0.04));
+            border-color: rgba(239,68,68,0.3);
+        }
+        .ver-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+        .ver-card-badge {
+            width: 50px; height: 50px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center; font-size: 26px;
+        }
+        .ver-card.valido .ver-card-badge { background: var(--primary); }
+        .ver-card.caducado .ver-card-badge { background: var(--amber); }
+        .ver-card.invalido .ver-card-badge { background: var(--red); }
+        .ver-card-titulo { font-size: 19px; font-weight: 700; color: var(--text); }
+        .ver-card-sub { font-size: 13px; color: var(--text-muted); }
+        .ver-row {
+            display: flex; justify-content: space-between; padding: 11px 0;
+            border-bottom: 1px solid var(--border); font-size: 14px;
+        }
+        .ver-row:last-child { border-bottom: none; }
+        .ver-row-label { color: var(--text-dim); }
+        .ver-row-value { color: var(--text); font-weight: 600; }
+
+        .ver-footer {
+            text-align: center; margin-top: 30px;
+        }
+        .ver-footer a { color: var(--red); text-decoration: none; font-size: 14px; }
+        .ver-footer a:hover { text-decoration: underline; }
+    </style>
 </head>
-<body class="verificar-page">
+<body>
 
-    <header class="verificar-header">
-        <div class="verificar-header-content">
-            <img src="imagenes/logo.png" alt="Logo" class="header-logo">
-            <h1>HalalConnect</h1>
+    <nav class="mk-nav">
+        <a href="marketplace.html" class="mk-brand">
+            <div class="mk-brand-icon">☪</div>
+            <div>
+                <div class="mk-brand-name">HalalConnect</div>
+                <div class="mk-brand-sub">Marketplace Halal de confianza</div>
+            </div>
+        </a>
+        <div class="mk-nav-links">
+            <a href="marketplace.html">Productos</a>
+            <a href="market_map.html">Tiendas</a>
+            <a href="verificar.html">Verificar</a>
+            <a href="denunciar.html">Reportar</a>
         </div>
-    </header>
+    </nav>
 
-    <main class="verificar-container">
-        <div class="verificar-hero">
-            <h2>Verificador de Certificados Halal</h2>
-            <p>Comprueba al instante si un certificado Halal es auténtico y está vigente</p>
-        </div>
-
-        <div class="verificar-box">
-            <form id="formVerificar">
-                <div class="form-group">
-                    <label>Número de Certificado</label>
-                    <input type="text" id="numero" placeholder="Ejemplo: HALAL-2024-001" required>
-                </div>
-                <button type="submit" class="btn-primary">Verificar Certificado</button>
-            </form>
-
-            <div id="resultado" class="resultado-container"></div>
+    <div class="ver-container">
+        <div class="ver-head">
+            <div class="ver-icon">🔍</div>
+            <h1>Verificar Certificado Halal</h1>
+            <p>Introduce el número del certificado para comprobar su autenticidad y validez al instante</p>
         </div>
 
-        <div class="verificar-info">
-            <h3>¿Por qué verificar?</h3>
-            <p>El sello Halal garantiza que un producto o servicio cumple con los principios de la doctrina islámica. Sin embargo, no todos los certificados son auténticos. Con esta herramienta puedes comprobar al instante si el certificado de una empresa es real y está en vigor.</p>
+        <div class="ver-search">
+            <input type="text" id="numero" placeholder="Ej: HALAL-2024-001"
+                   onkeydown="if(event.key==='Enter') verificar()">
+            <button onclick="verificar()">Verificar</button>
         </div>
-    </main>
 
-    <footer class="verificar-footer">
-        <p>© 2026 HalalConnect · Sistema de Gestión de Certificaciones Halal</p>
-        <p><a href="index.html">Acceso para empleados</a></p>
-    </footer>
+        <div class="ver-resultado" id="resultado"></div>
+
+        <div class="ver-footer">
+            <a href="denunciar.html">¿Producto sospechoso? Repórtalo aquí</a>
+        </div>
+    </div>
 
     <script src="js/verificar.js"></script>
+    <script src="js/chatbot.js"></script>
 </body>
 </html>

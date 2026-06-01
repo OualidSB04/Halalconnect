@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Producto</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        .mk-nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 40px; background: rgba(10,15,29,0.85);
+            backdrop-filter: blur(12px); border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .mk-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .mk-brand-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; font-size: 20px;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .mk-brand-name { font-size: 18px; font-weight: 800; color: var(--text); }
+        .mk-brand-sub { font-size: 11px; color: var(--text-dim); }
+        .mk-nav-links { display: flex; align-items: center; gap: 8px; }
+        .mk-nav-links a {
+            color: var(--text-muted); text-decoration: none; font-size: 14px;
+            padding: 9px 16px; border-radius: 10px; transition: all 0.2s ease;
+        }
+        .mk-nav-links a:hover { color: var(--text); background: var(--bg-surface-2); }
+
+        .item-container {
+            max-width: 1000px; margin: 0 auto; padding: 30px 40px 60px;
+        }
+        .item-back {
+            color: var(--text-muted); text-decoration: none; font-size: 14px;
+            display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px;
+            transition: color 0.2s ease;
+        }
+        .item-back:hover { color: var(--primary); }
+
+        .item-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+            animation: fadeInUp 0.5s ease;
+        }
+        .item-img {
+            width: 100%; border-radius: 18px; border: 1px solid var(--border);
+            background: var(--bg-surface); aspect-ratio: 4/3; object-fit: cover;
+        }
+        .item-cat {
+            font-size: 12px; color: var(--primary); text-transform: uppercase;
+            letter-spacing: 0.06em; font-weight: 700; margin-bottom: 10px;
+        }
+        .item-name {
+            font-size: 32px; font-weight: 800; color: var(--text);
+            letter-spacing: -0.02em; margin-bottom: 8px;
+        }
+        .item-brand { font-size: 15px; color: var(--text-muted); margin-bottom: 24px; }
+        .item-price {
+            font-size: 38px; font-weight: 800; color: var(--text);
+            letter-spacing: -0.02em; margin-bottom: 24px;
+        }
+        .item-price span { font-size: 18px; color: var(--text-dim); }
+        .item-desc {
+            font-size: 15px; color: var(--text-muted); line-height: 1.7;
+            margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--border);
+        }
+
+        .cert-box {
+            background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.04));
+            border: 1px solid rgba(16,185,129,0.3); border-radius: 16px;
+            padding: 22px; margin-bottom: 24px;
+        }
+        .cert-box-head { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .cert-box-icon {
+            width: 44px; height: 44px; background: var(--primary); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; font-size: 22px;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .cert-box-title { font-size: 16px; font-weight: 700; color: var(--primary); }
+        .cert-box-sub { font-size: 12px; color: var(--text-muted); }
+        .cert-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; }
+        .cert-row-label { color: var(--text-dim); }
+        .cert-row-value { color: var(--text); font-weight: 600; }
+        .cert-no {
+            color: var(--amber); font-size: 14px; padding: 10px 0;
+        }
+
+        .item-buy-btn {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff; border: none; border-radius: 12px; font-size: 16px;
+            font-weight: 700; cursor: pointer; transition: all 0.2s ease; font-family: inherit;
+        }
+        .item-buy-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--primary-glow); }
+
+        .item-store {
+            margin-top: 18px; padding: 16px; background: var(--bg-surface);
+            border: 1px solid var(--border); border-radius: 12px;
+            font-size: 14px; color: var(--text-muted);
+        }
+        .item-store strong { color: var(--text); }
+
+        @media (max-width: 800px) {
+            .item-grid { grid-template-columns: 1fr; }
+            .item-container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="mk-nav">
+        <a href="marketplace.html" class="mk-brand">
+            <div class="mk-brand-icon">☪</div>
+            <div>
+                <div class="mk-brand-name">HalalConnect</div>
+                <div class="mk-brand-sub">Marketplace Halal de confianza</div>
+            </div>
+        </a>
+        <div class="mk-nav-links">
+            <a href="marketplace.html">Productos</a>
+            <a href="market_map.html">Tiendas</a>
+            <a href="verificar.html">Verificar</a>
+        </div>
+    </nav>
+
+    <div class="item-container">
+        <a href="marketplace.html" class="item-back">← Volver al marketplace</a>
+        <div id="contenido-producto">
+            <p style="color:var(--text-dim)">Cargando producto...</p>
+        </div>
+    </div>
+
+    <script src="js/carrito.js"></script>
+    <script src="js/item.js"></script>
+    <script src="js/chatbot.js"></script>
+</body>
+</html>

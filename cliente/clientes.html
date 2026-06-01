@@ -8,47 +8,40 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="navbar-brand"><img src="imagenes/logo.png" alt="Logo" class="navbar-logo">HalalConnect</div>
-        <div class="navbar-menu">
-            <a href="dashboard.html">Dashboard</a>
-            <a href="clientes.html">Clientes</a>
-            <a href="certificaciones.html">Certificaciones</a>
-            <span id="usuario-nombre"></span>
-            <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
-        </div>
-    </nav>
+    <div class="app-layout">
 
-    <div class="container">
-        <div class="page-header">
-            <h2>Gestión de Clientes</h2>
-        <div class="header-actions">
-            <button class="btn-secondary" onclick="exportarCSV()">Exportar CSV</button>
-            <button class="btn-add" onclick="abrirModal()">+ Nuevo Cliente</button>
-        </div>
-</div>
-
-        <div class="search-bar">
-            <input type="text" id="buscador" placeholder="Buscar por nombre, sector o ciudad..." oninput="filtrarClientes()">
+        <div class="topbar">
+            <div>
+                <div class="topbar-title">Clientes</div>
+                <div class="topbar-subtitle">Empresas certificadas en la plataforma</div>
+            </div>
+            <div class="topbar-actions">
+                <input type="text" id="buscador" placeholder="Buscar cliente..." oninput="filtrarClientes()">
+                <button class="btn-add" onclick="abrirModal()">+ Nuevo Cliente</button>
+                <button class="btn-secondary" onclick="exportarCSV()">Exportar CSV</button>
+            </div>
         </div>
 
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Empresa</th>
-                        <th>Sector</th>
-                        <th>Ciudad</th>
-                        <th>Teléfono</th>
-                        <th>Email</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-clientes">
-                    <tr><td colspan="6" style="text-align: center; padding: 30px;">Cargando...</td></tr>
-                </tbody>
-            </table>
+        <div class="page-content">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>Sector</th>
+                            <th>Ciudad</th>
+                            <th>Telefono</th>
+                            <th>Email</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-clientes">
+                        <tr><td colspan="6" style="text-align:center;padding:30px;color:#64748b">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </div>
 
     <div class="modal-overlay" id="modal">
@@ -58,31 +51,31 @@
                 <input type="hidden" id="cliente-id">
                 <div class="form-group">
                     <label>Nombre de la Empresa *</label>
-                    <input type="text" id="nombre_empresa" required>
+                    <input type="text" id="nombre_empresa" required placeholder="Ej: Carniceria Al-Halal">
                 </div>
                 <div class="form-group">
                     <label>Sector</label>
                     <select id="sector">
-                        <option value="">Selecciona un sector</option>
-                        <option value="Alimentación">Alimentación</option>
-                        <option value="Restauración">Restauración</option>
-                        <option value="Cosmética">Cosmética</option>
-                        <option value="Carnicería">Carnicería</option>
-                        <option value="Importación">Importación</option>
+                        <option value="">Selecciona sector...</option>
+                        <option value="Alimentacion">Alimentacion</option>
+                        <option value="Restauracion">Restauracion</option>
+                        <option value="Cosmetica">Cosmetica</option>
+                        <option value="Farmaceutico">Farmaceutico</option>
+                        <option value="Textil">Textil</option>
                         <option value="Otro">Otro</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Ciudad</label>
-                    <input type="text" id="ciudad" placeholder="Madrid, Barcelona, etc.">
+                    <input type="text" id="ciudad" placeholder="Ej: Madrid">
                 </div>
                 <div class="form-group">
-                    <label>Teléfono</label>
-                    <input type="tel" id="telefono" placeholder="612345678">
+                    <label>Telefono</label>
+                    <input type="text" id="telefono" placeholder="Ej: 912345678">
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" id="email" placeholder="contacto@empresa.es">
+                    <input type="email" id="email" placeholder="Ej: contacto@empresa.es">
                 </div>
                 <div class="modal-buttons">
                     <button type="button" class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
@@ -92,6 +85,8 @@
         </div>
     </div>
 
+    <script src="js/sidebar.js"></script>
+    <script>generarSidebar('clientes');</script>
     <script src="js/clientes.js"></script>
 </body>
 </html>

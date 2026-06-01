@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Denuncias</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div class="app-layout">
+
+        <div class="topbar">
+            <div>
+                <div class="topbar-title">Denuncias</div>
+                <div class="topbar-subtitle">Reportes de productos sospechosos recibidos</div>
+            </div>
+        </div>
+
+        <div class="page-content">
+
+            <div class="stats-grid" style="margin-bottom:24px">
+                <div class="stat-card">
+                    <div class="stat-card-label">Total Denuncias</div>
+                    <div class="stat-card-value" id="total-denuncias">0</div>
+                    <div class="stat-card-desc">Recibidas en total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Pendientes</div>
+                    <div class="stat-card-value amber" id="denuncias-pendientes">0</div>
+                    <div class="stat-card-desc">Esperando revision</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Resueltas</div>
+                    <div class="stat-card-value green" id="denuncias-resueltas">0</div>
+                    <div class="stat-card-desc">Gestionadas correctamente</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">Rechazadas</div>
+                    <div class="stat-card-value red" id="denuncias-rechazadas">0</div>
+                    <div class="stat-card-desc">Falsas o incorrectas</div>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Establecimiento</th>
+                            <th>Descripcion</th>
+                            <th>Email</th>
+                            <th>Estado</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-denuncias">
+                        <tr><td colspan="7" style="text-align:center;padding:30px;color:#64748b">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+<div class="modal-overlay" id="modal-detalle">
+        <div class="modal">
+            <h3>Detalle de la Denuncia</h3>
+            <div style="display:flex;flex-direction:column;gap:14px">
+                <div>
+                    <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Producto</div>
+                    <div id="det-producto" style="color:#f8fafc;font-weight:600"></div>
+                </div>
+                <div>
+                    <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Establecimiento</div>
+                    <div id="det-establecimiento" style="color:#e2e8f0"></div>
+                </div>
+                <div>
+                    <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Descripción</div>
+                    <div id="det-descripcion" style="color:#e2e8f0;line-height:1.6;background:#0f172a;padding:14px;border-radius:10px;border:1px solid #334155"></div>
+                </div>
+                <div style="display:flex;gap:24px">
+                    <div>
+                        <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Email</div>
+                        <div id="det-email" style="color:#e2e8f0"></div>
+                    </div>
+                    <div>
+                        <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Fecha</div>
+                        <div id="det-fecha" style="color:#e2e8f0"></div>
+                    </div>
+                    <div>
+                        <div style="font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Estado</div>
+                        <div id="det-estado" style="color:#e2e8f0;text-transform:capitalize"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button type="button" class="btn-primary" onclick="cerrarDetalle()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/sidebar.js"></script>
+    <script>generarSidebar('denuncias');</script>
+    <script src="js/denuncias.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HalalConnect — Mapa Halal</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        #mapa {
+            height: calc(100vh - 200px);
+            width: 100%;
+            border-radius: 12px;
+            border: 0.5px solid #334155;
+        }
+        .mapa-filtros {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .mapa-filtros input,
+        .mapa-filtros select {
+            padding: 10px 14px;
+            background: #1e293b;
+            border: 0.5px solid #334155;
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 14px;
+            flex: 1;
+            min-width: 180px;
+        }
+        .mapa-filtros input::placeholder {
+            color: #475569;
+        }
+        .leaflet-popup-content-wrapper {
+            background: #1e293b;
+            border: 0.5px solid #334155;
+            color: #e2e8f0;
+            border-radius: 10px;
+        }
+        .leaflet-popup-tip {
+            background: #1e293b;
+        }
+        .leaflet-popup-content strong {
+            color: #10b981;
+            font-size: 14px;
+        }
+        .leaflet-popup-content p {
+            margin: 4px 0;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .mapa-contador {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+        .mapa-contador span {
+            color: #10b981;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+
+        <div class="topbar">
+            <div>
+                <div class="topbar-title">Mapa Halal</div>
+                <div class="topbar-subtitle">Establecimientos certificados en Espana</div>
+            </div>
+            <div class="topbar-actions">
+                <button class="btn-secondary" onclick="centrarEspana()">Ver Espana completa</button>
+            </div>
+        </div>
+
+        <div class="page-content">
+            <div class="mapa-filtros">
+                <input type="text" id="buscar-mapa" placeholder="Buscar por nombre o ciudad..." oninput="filtrarMapa()">
+                <select id="filtro-tipo" onchange="filtrarMapa()">
+                    <option value="">Todos los tipos</option>
+                    <option value="Restaurante">Restaurante</option>
+                    <option value="Carniceria">Carniceria</option>
+                    <option value="Supermercado">Supermercado</option>
+                    <option value="Tienda">Tienda</option>
+                    <option value="Panaderia">Panaderia</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+            <div class="mapa-contador">
+                Mostrando <span id="contador">0</span> establecimientos
+            </div>
+            <div id="mapa"></div>
+        </div>
+
+    </div>
+
+    <script src="js/sidebar.js"></script>
+    <script>generarSidebar('mapa');</script>
+    <script src="js/mapa.js"></script>
+</body>
+</html>
